@@ -1,0 +1,22 @@
+The files contain the images, curves, and labels for the regular polygon dataset. The number at the end of the file name indicates the resolution of the image grid.
+
+Structure of files
+RegularPolyCurves###.npy
+List where each element contains all the bezier curves (line segments) that make up the polygon.
+
+
+RegularPolyImgs###.npy
+(...,grid_size,grid_size) 3D array where each ... is an image of the polygon.
+
+
+RegularPolyLabels###.npy
+(...,largest Num Sides - 2) 2D array where each row is a one hot of what shape it is. If the largest number of sides is six then the 2D array has size (...,4). 
+Examples (largest shape hexagon)
+triangle: 	(1, 0, 0, 0)
+square: 	(0, 1, 0, 0)
+pentagon:	(0, 0, 1, 0)
+hexagon: 	(0, 0, 0, 1)
+If the largest shape was an octagon then each one hot would have two more zeros at the end.
+
+General Notes:
+To get sample x data, take the xth element of the list (Curves), xth 2D array of IMGs, xth row of the Labels.
