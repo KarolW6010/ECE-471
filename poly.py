@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #Data Set Parameters
-perType = int(1e4) 		#Number of data points per type
+perType = int(1e3) 		#Number of data points per type
 grid_size = 128			#Size of coordinate system
 num_sides = 10			#Maximum amount of sides for generated polygons
 showPoly = 0			#Amount to display
 
 #Save Destinations
-imgs = "RegularPolyImgs" + str(grid_size)
-crvs = "RegularPolyCurves" + str(grid_size)
-labels = "RegularPolyLabels" + str(grid_size)
+imgs = "Test_RegularPolyImgs" + str(grid_size)
+crvs = "Test_RegularPolyCurves" + str(grid_size)
+labels = "Test_RegularPolyLabels" + str(grid_size)
 
 #Set up
 shapeSides = np.arange(3,num_sides+1)						#Number of sides per shape
