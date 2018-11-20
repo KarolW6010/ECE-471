@@ -62,19 +62,19 @@ valSamp	 = data.amtValid	#Number of validation samples
 testSamp = data.amtTest		#Number of test samples
 
 #Convolutional Neural Net Structure
-CL_1 	= 8					#Size of Convolutional Layer 1, layer 1
-CL_2 	= 8					#Size of Convolutional Layer 2, layer 2
+CL_1 	= 8		    		#Size of Convolutional Layer 1, layer 1
+CL_2 	= 8			    	#Size of Convolutional Layer 2, layer 2
 FC_1 	= 8 				#Size of Fully Conected Layer,	layer 3
-CLASSES = data.classes 		#Size of Output Layer
-WS_1 = 5					#Window Size for CL_1
-WS_2 = 5					#Window Size for CL_2
+CLASSES = data.classes 	        	#Size of Output Layer
+WS_1 = 5		    		#Window Size for CL_1
+WS_2 = 5	    			#Window Size for CL_2
 STRIDE = 1
 
 #Training and Hyperparameters
-DROP 	= 0.8				#Dropout Keep Probability
-LR 		= 1e-3				#Learning Rate
-EPOCHS 	= 5					#Go through all the test data this many times
-NUM_BATCHES = 1000			#Number of batches per epoch
+DROP 	= 0.8						#Dropout Keep Probability
+LR  	= 1e-3						#Learning Rate
+EPOCHS 	= 5 						#Go through all the test data this many times
+NUM_BATCHES = trSamp				#Number of batches per epoch
 BATCH_SIZE  = trSamp/NUM_BATCHES	#Number of samples per batch
 
 print("\nStructure: ", CL_1, CL_2, FC_1, WS_1, WS_2)
@@ -110,14 +110,18 @@ def convNet(x, dropout):	#Puts input x through the convolutional network
 	return tf.add(tf.matmul(layer_3, weights['wOL']), biases['bOL'])
 
 def slowIn(ims,labs,amt):		#Slowly Feed in the validation or test data
-	lossAv = 0		#Average Batch Loss
-	accAv = 0		#Average Batch Accuracy
-	count = 0		#Count how mant times through the loop
-	bs = amt/100	#Batch size
-	for i in range(int(bs)):
-		ran = np.int32(np.arange(i*bs, (i+1)*bs))
+	lossAv = 0			#Average Batch Loss
+	accAv = 0			#Average Batch Accuracy
+	count = 0			#Count how mant times through the loop
+	bs = amt           	#Batch size
+	for i in range(amt):
+		ran = [i]
+		IMGs = [ims[i] for i in ran]
+		LBs = labs[ran,:]
+
+		#print(np.shape(labs), type(labs))
 		loss_val, acc_val = sess.run([loss,acc],\
-			feed_dict = {imgs: ims[ran], labels: labs[ran,:], dropout: 1})
+			feed_dict = {imgs: IMGs, labels: LBs, dropout: 1})
 		lossAv += loss_val
 		accAv += acc_val
 		count += 1
@@ -172,7 +176,7 @@ for epoch in range(EPOCHS):
 
 		#Current batch
 		imgs_curr = [imgs_all[i] for i in ran]
-		print(type(imgs_curr),np.shape(imgs_curr),np.shape(imgs_curr[0]))
+		#print(type(imgs_curr),np.shape(imgs_curr),np.shape(imgs_curr[0]))
 		labels_curr = labels_all[ran,:]
 
 		#Train on batch
@@ -183,7 +187,7 @@ for epoch in range(EPOCHS):
 		#################################################################
 
 		#Check validation data and save parameters
-		if (batch_num + 1) % 500 == 0:
+		if (batch_num + 1) % 10000 == 0:
 			saver.save(sess, checkpoint_dir + 'model_' + str(savePt) + '.ckpt')
 			savePt += 1
 
